@@ -24,7 +24,7 @@ export async function ComplaintController(req,resp){
       })
       if(complaint){
        const aiResponse = await analyzeComplaint(originalComplaint); 
-       complaint.aiResponse.category  = aiResponse.category
+       complaint.aiResponse  = aiResponse
        complaint.status = 'analyzed'
        await complaint.save()
       }
@@ -34,3 +34,26 @@ export async function ComplaintController(req,resp){
         return resp.status(500).json({message:"Internal server error",error})
     }
 }
+
+export async function getMyComplaintsController(req, resp) {
+  try {
+    const accessToken = req.headers.authorization?.split(' ')[1];
+    if (!accessToken) {
+      return resp.status(401).json({ message: 'Authentication Required' });
+    }
+
+    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
+    const complaints = await Complaint.find({ userId: decoded.id }).sort({ createdAt: -1 });
+
+    return resp.status(200).json({ message: 'Complaints fetched successfully', complaints });
+  } catch (error) {
+    return resp.status(500).json({ message: 'Internal server error', error });
+  }
+}
+
+// export async function getMySpecificComplaintController(req,resp){
+//   try{
+
+//   }
+//   catch(error)
+// }

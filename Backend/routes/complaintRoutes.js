@@ -1,5 +1,9 @@
 import express from 'express'
-import { ComplaintController } from '../controller/complaintController.js'
+import { ComplaintController, getMyComplaintsController } from '../controller/complaintController.js'
+
+
 const complaintRouter = express.Router()
-complaintRouter.post("/complaint",ComplaintController)
+complaintRouter.post('/complaint', ComplaintController)
+complaintRouter.get('/complaint/mycomplaints', getMyComplaintsController)
+
 export default complaintRouter

@@ -29,7 +29,7 @@ const MpRegister = () => {
     setIsSubmitting(true);
 
     try {
-      await apiClient.post('/registermp', {
+      await apiClient.post('/auth/registermp', {
         name: formData.name,
         email: formData.email,
         password: formData.password,

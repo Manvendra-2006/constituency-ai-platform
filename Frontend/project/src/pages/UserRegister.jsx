@@ -28,7 +28,7 @@ const UserRegister = () => {
     setIsSubmitting(true);
 
     try {
-      await apiClient.post('/register', {
+      await apiClient.post('/auth/register', {
         name: formData.name,
         email: formData.email,
         password: formData.password,

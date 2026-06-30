@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   const loginUser = async ({ email, password }) => {
     setRefreshMode('user');
 
-    const response = await apiClient.post('/login', { email, password });
+    const response = await apiClient.post('/auth/login', { email, password });
     const token = response.data?.accessToken;
 
     if (!token) {
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     setClientAccessToken(token);
     setAccessTokenState(token);
 
-    const profileResponse = await apiClient.get('/getMe');
+    const profileResponse = await apiClient.get('/auth/getMe');
     const profile = profileResponse.data?.userProfile;
 
     setUser({ ...profile, isMp: false });
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   const loginMp = async ({ email, password }) => {
     setRefreshMode('mp');
 
-    const response = await apiClient.post('/loginmp', { email, password });
+    const response = await apiClient.post('/auth/loginmp', { email, password });
     const token = response.data?.accessToken;
 
     if (!token) {
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     setClientAccessToken(token);
     setAccessTokenState(token);
 
-    const profileResponse = await apiClient.get('/mpProfile');
+    const profileResponse = await apiClient.get('/auth/mpProfile');
     const profile = profileResponse.data?.userProfile;
 
     setUser({ ...profile, isMp: true });
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const logoutEndpoint = user?.isMp ? '/logoutmp' : '/logout';
+      const logoutEndpoint = user?.isMp ? '/auth/logoutmp' : '/auth/logout';
       await apiClient.get(logoutEndpoint);
     } catch (err) {
       // Ignore logout errors, but clear local auth state anyway.

@@ -24,7 +24,7 @@ const UserLogin = () => {
 
     try {
       await loginUser(formData);
-      navigate('/user');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Unable to login.');
     } finally {

@@ -2,7 +2,8 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import useAuth from './hooks/useAuth.js';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
-import UserDashboard from './pages/UserDashboard.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import AddComplaint from './pages/AddComplaint.jsx';
 import MpDashboard from './pages/MpDashboard.jsx';
 import UserLogin from './pages/UserLogin.jsx';
 import UserRegister from './pages/UserRegister.jsx';
@@ -16,7 +17,7 @@ const HomeRedirect = () => {
     return <Navigate to="/login" replace />;
   }
 
-  return user?.isMp ? <Navigate to="/mp" replace /> : <Navigate to="/user" replace />;
+  return user?.isMp ? <Navigate to="/mp" replace /> : <Navigate to="/dashboard" replace />;
 };
 
 const App = () => (
@@ -31,7 +32,23 @@ const App = () => (
         path="/user"
         element={
           <ProtectedRoute role="user">
-            <UserDashboard />
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute role="user">
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-complaint"
+        element={
+          <ProtectedRoute role="user">
+            <AddComplaint />
           </ProtectedRoute>
         }
       />

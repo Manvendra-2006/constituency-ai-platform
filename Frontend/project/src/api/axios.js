@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Create a shared Axios instance for auth requests.
+// Create a shared Axios instance for all API requests.
 const apiClient = axios.create({
-  baseURL: 'http://localhost:6700/api/auth',
+  baseURL: 'http://localhost:6700/api',
   withCredentials: true,
 });
 
@@ -28,8 +28,8 @@ export const registerSessionExpiredHandler = (handler) => {
 };
 
 const refreshEndpoints = {
-  user: '/refreshtoken',
-  mp: '/refreshmptoken',
+  user: '/auth/refreshtoken',
+  mp: '/auth/refreshmptoken',
 };
 
 const requestRefreshToken = async () => {

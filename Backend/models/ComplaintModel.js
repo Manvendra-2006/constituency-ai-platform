@@ -13,10 +13,15 @@ const complaintSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    status:{
+    aistatus:{
         type:String,
         enum:['pending','analyzed'],
         default:'pending'
+    },
+    complaintStatus:{
+        type:String,
+        enum:['new','resolved','in-progress','rejected'],
+        default:'new'
     },
     aiResponse:{
         category:{

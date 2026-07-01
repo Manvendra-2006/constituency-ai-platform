@@ -1,9 +1,9 @@
 import express from 'express'
-import { ComplaintController, getMyComplaintsController, getMySpecificComplaintController } from '../controller/complaintController.js'
+import { ComplaintController, getMyComplaintsController } from '../controller/complaintController.js'
+import { AuthMiddleware } from '../Middleware/auth.middleware.js'
 
 
 const complaintRouter = express.Router()
-complaintRouter.post('/complaint', ComplaintController)
-complaintRouter.get('/complaint/mycomplaints', getMyComplaintsController)
-complaintRouter.get('/complaint/:id',getMySpecificComplaintController)
+complaintRouter.post('/complaint',AuthMiddleware, ComplaintController)
+complaintRouter.get('/complaint/mycomplaints',AuthMiddleware, getMyComplaintsController)
 export default complaintRouter

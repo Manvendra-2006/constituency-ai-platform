@@ -66,12 +66,21 @@ apiClient.interceptors.response.use(
 
     const status = error.response?.status;
     const requestUrl = originalRequest.url || '';
+    const authEndpoints = ['/auth/login', '/auth/register', '/auth/loginmp', '/auth/registermp'];
+    const isAuthEndpoint = authEndpoints.some(
+      (endpoint) => requestUrl === endpoint || requestUrl.endsWith(endpoint),
+    );
 
     if (status !== 401) {
       return Promise.reject(error);
     }
 
-    if (requestUrl.includes('/refreshtoken') || requestUrl.includes('/refreshmptoken')) {
+    if (isAuthEndpoint) {
+      return Promise.reject(error);
+    }
+
+    if (requestUrl.includes('/auth/refreshtoken') || requestUrl.includes('/auth/refreshmptoken')) {
+      clearAccessToken();
       if (typeof sessionExpiredHandler === 'function') {
         sessionExpiredHandler();
       }
@@ -91,8 +100,11 @@ apiClient.interceptors.response.use(
           return newToken;
         })
         .catch((refreshError) => {
-          if (refreshError.response?.status === 401 && typeof sessionExpiredHandler === 'function') {
-            sessionExpiredHandler();
+          if (refreshError.response?.status === 401) {
+            clearAccessToken();
+            if (typeof sessionExpiredHandler === 'function') {
+              sessionExpiredHandler();
+            }
           }
           throw refreshError;
         })
@@ -103,6 +115,7 @@ apiClient.interceptors.response.use(
 
     try {
       const newToken = await activeRefreshPromise;
+      originalRequest.headers = originalRequest.headers || {};
       originalRequest.headers.Authorization = `Bearer ${newToken}`;
       return apiClient(originalRequest);
     } catch (refreshError) {

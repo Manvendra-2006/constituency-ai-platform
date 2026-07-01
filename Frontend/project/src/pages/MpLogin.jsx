@@ -21,11 +21,14 @@ const MpLogin = () => {
     event.preventDefault();
     setError('');
     setIsSubmitting(true);
+    console.log('[MpLogin] submitting MP login form');
 
     try {
       await loginMp(formData);
-      navigate('/mp');
+      console.log('[MpLogin] login completed, navigating to /mp');
+      navigate('/mp', { replace: true });
     } catch (err) {
+      console.error('[MpLogin] login failed', err);
       setError(err.response?.data?.message || err.message || 'Unable to login.');
     } finally {
       setIsSubmitting(false);

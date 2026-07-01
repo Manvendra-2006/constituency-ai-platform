@@ -1,45 +1,39 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth.js';
 
-const Navbar = () => {
-  const navigate = useNavigate();
+const Navbar = ({ title = 'Dashboard', subtitle = 'Track complaints in one place.', actions = null }) => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isMpView = location.pathname.startsWith('/mp');
 
   return (
-    <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', gap: '16px', flexWrap: 'wrap' }}>
-      <div>
-        <h1 style={{ margin: 0, color: '#0f172a', fontSize: '28px' }}>Welcome, {user?.name || 'User'}</h1>
-        <p style={{ margin: '6px 0 0', color: '#64748b' }}>Track your complaints in one place.</p>
+    <header className="navbar-shell">
+      <div className="navbar-brand">
+        <div className="navbar-logo">{title === 'MP Dashboard' ? 'MP' : 'G'}</div>
+        <div>
+          <h1>{title}</h1>
+          <p>{subtitle}</p>
+        </div>
       </div>
-      <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-        <button
-          type="button"
-          onClick={() => navigate('/add-complaint')}
-          style={{
-            border: 'none',
-            background: '#2563eb',
-            color: '#ffffff',
-            padding: '10px 16px',
-            borderRadius: '999px',
-            cursor: 'pointer',
-            fontWeight: 600,
-          }}
-        >
-          New Complaint
-        </button>
-        <button
-          type="button"
-          onClick={logout}
-          style={{
-            border: '1px solid #cbd5e1',
-            background: '#ffffff',
-            color: '#334155',
-            padding: '10px 16px',
-            borderRadius: '999px',
-            cursor: 'pointer',
-            fontWeight: 600,
-          }}
-        >
+
+      <div className="navbar-actions">
+        {isMpView ? (
+          <div className="navbar-nav-pills">
+            <button type="button" className={`nav-pill ${location.pathname === '/mp' ? 'active' : ''}`} onClick={() => navigate('/mp')}>
+              Dashboard
+            </button>
+            <button type="button" className={`nav-pill ${location.pathname === '/mp/insights' ? 'active' : ''}`} onClick={() => navigate('/mp/insights')}>
+              AI Insights
+            </button>
+          </div>
+        ) : null}
+        {actions}
+        <div className="navbar-user-pill">
+          <span>{user?.name || 'User'}</span>
+        </div>
+        <button type="button" className="btn btn-outline" onClick={logout}>
           Logout
         </button>
       </div>

@@ -287,6 +287,7 @@ export async function AIInsightsController(req, resp) {
             {
                 $sort: {
                     count: -1,
+                    _id:1
                 },
             },
             {
@@ -310,6 +311,7 @@ export async function AIInsightsController(req, resp) {
             {
                 $sort: {
                     count: -1,
+                    _id:1
                 },
             },
             {

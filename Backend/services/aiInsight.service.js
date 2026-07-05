@@ -1,40 +1,42 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
-export async function generateAIInsight(topVillage, topCategory, highUrgencyComplaints) {
-    try {
-        const model = genAI.getGenerativeModel({
-            model: "gemini-2.5-flash",
-        });
-
-        const prompt = `
-You are an AI development planning assistant for an Indian Member of Parliament.
-
-Current complaint statistics:
-
+export async function generateAIInsight(
+  topVillage,
+  topCategory,
+  highUrgencyComplaints
+) {
+  try {
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content: `You are an AI advisor for an Indian Member of Parliament.
+Give short, professional and actionable recommendations.
+Maximum 2 sentences.`,
+        },
+        {
+          role: "user",
+          content: `
 Top Village: ${topVillage}
-
 Top Complaint Category: ${topCategory}
-
 High Urgency Complaints: ${highUrgencyComplaints}
 
-Generate a professional recommendation for the MP.
+Generate a recommendation for the MP.
+`,
+        },
+      ],
+      temperature: 0.4,
+    });
 
-Rules:
-- Maximum 2 sentences.
-- Mention the village name.
-- Mention the category.
-- Explain why this issue should be prioritized.
-- Keep it concise and actionable.
-`;
+    return completion.choices[0].message.content;
+  } catch (error) {
+    console.error(error);
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-
-        return response.text();
-    } catch (error) {
-        console.log(error);
-        return "Unable to generate AI recommendation.";
-    }
+    return `Priority attention is recommended for ${topCategory} complaints in ${topVillage}. There are currently ${highUrgencyComplaints} high urgency complaints requiring immediate action.`;
+  }
 }

@@ -7,7 +7,7 @@ const complaintSchema = new mongoose.Schema({
     }  ,
     originalComplaint:{
         type:String,
-        required:true
+        default:""
     },
     village:{
         type:String,
@@ -15,13 +15,22 @@ const complaintSchema = new mongoose.Schema({
     },
     aistatus:{
         type:String,
-        enum:['pending','analyzed'],
+        enum:['pending','analyzed','failed'],
+        default:'pending'
+    },
+    aiStatus:{
+        type:String,
+        enum:['pending','analyzed','failed'],
         default:'pending'
     },
     complaintStatus:{
         type:String,
         enum:['new','resolved','in-progress','rejected'],
         default:'new'
+    },
+    image:{
+        type:String,
+        default:null
     },
     aiResponse:{
         category:{
@@ -42,7 +51,14 @@ const complaintSchema = new mongoose.Schema({
         confidence:{
             type:Number
         }
-    }
+    },
+    latitude: {
+    type: Number,
+},
+
+longitude: {
+    type: Number,
+},
 },{
     timestamps:true
 })

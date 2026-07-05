@@ -1,8 +1,13 @@
-const Loading = ({ label = 'Loading dashboard data…' }) => (
-  <div className="loading-state">
-    <div className="spinner" />
-    <p>{label}</p>
-  </div>
-);
+import { useTranslation } from "react-i18next";
+
+const Loading = ({ label }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      {label || t("loading")}
+    </div>
+  );
+};
 
 export default Loading;

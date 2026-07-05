@@ -1,6 +1,7 @@
 import useAuth from '../hooks/useAuth.js';
-
+import { useTranslation } from "react-i18next";
 const UserDashboard = () => {
+  const { i18n } = useTranslation();
   const { user, logout } = useAuth();
 
   return (
@@ -10,6 +11,20 @@ const UserDashboard = () => {
         <button type="button" onClick={logout} className="logout-button">
           Logout
         </button>
+        <select
+  value={i18n.language}
+  onChange={(e) => i18n.changeLanguage(e.target.value)}
+  style={{
+    padding: "8px 12px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+    cursor: "pointer",
+    fontSize: "14px",
+  }}
+>
+  <option value="en">🇺🇸 English</option>
+  <option value="hi">🇮🇳 हिन्दी</option>
+</select>
       </header>
 
       <section className="profile-card">

@@ -8,12 +8,15 @@ import ComplaintTable from '../components/ComplaintTable.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import Loading from '../components/Loading.jsx';
 import StatCard from '../components/StatCard.jsx';
-
+import { useTranslation } from "react-i18next";
+import ComplaintMap from "../components/ComplaintMap";
 const MpDashboard = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [analytics, setAnalytics] = useState(null);
   const [complaints, setComplaints] = useState([]);
   const [hotspots, setHotspots] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [hotspotsLoading, setHotspotsLoading] = useState(true);
@@ -62,10 +65,21 @@ const MpDashboard = () => {
       setHotspotsLoading(false);
     }
   };
+  const loadMapLocations = async () => {
+  try {
+    const response = await apiClient.get("/user/complaints/map");
 
+    console.log("Data",response.data);   // <-- ye add karo
+
+    setLocations(response.data.locations || []);
+  } catch (err) {
+    console.log(err);
+  }
+};
   useEffect(() => {
     loadDashboardData();
     loadHotspots();
+    loadMapLocations();
   }, []);
 
   const colorPalette = ['#2563eb', '#f59e0b', '#10b981', '#8b5cf6', '#ef4444', '#eab308', '#0ea5e9', '#84cc16'];
@@ -80,18 +94,20 @@ const MpDashboard = () => {
   return (
     <div className="dashboard-shell">
       <div className="dashboard-inner">
-        <Navbar title="MP Dashboard" subtitle="Government grievance oversight center" />
-
+        <Navbar
+          title={t("mpDashboard")}
+          subtitle={t("mpDashboardSubtitle")}
+        />
         {error ? <ErrorMessage message={error} /> : null}
 
         {loading ? (
-          <Loading label="Loading analytics and actionable complaints…" />
+          <Loading label={t("loadingAnalytics")} />
         ) : (
           <>
             <section className="stats-grid">
-              <StatCard icon={LayoutDashboard} title="Total complaints" value={analytics?.totalComplaints ?? 0} subtitle="Across all districts" accent="linear-gradient(135deg, #2563eb, #60a5fa)" />
-              <StatCard icon={MessageSquareWarning} title="Pending" value={analytics?.pending ?? 0} subtitle="Needing attention" accent="linear-gradient(135deg, #dc2626, #f87171)" />
-              <StatCard icon={FileText} title="Analyzed" value={analytics?.analyzed ?? 0} subtitle="AI-reviewed grievances" accent="linear-gradient(135deg, #0f766e, #14b8a6)" />
+              <StatCard icon={LayoutDashboard} title={t("totalComplaints")} value={analytics?.totalComplaints ?? 0} subtitle={t("acrossAllDistricts")} accent="linear-gradient(135deg, #2563eb, #60a5fa)" />
+              <StatCard icon={MessageSquareWarning} title={t("pending")} value={analytics?.pending ?? 0} subtitle={t("needsAttention")} accent="linear-gradient(135deg, #dc2626, #f87171)" />
+              <StatCard icon={FileText} title={t("analyzed")} value={analytics?.analyzed ?? 0} subtitle={t("aiReviewed")} accent="linear-gradient(135deg, #0f766e, #14b8a6)" />
             </section>
 
             <section className="charts-grid">
@@ -101,8 +117,9 @@ const MpDashboard = () => {
                     <BarChart3 size={18} />
                   </div>
                   <div>
-                    <h3>Category-wise complaints</h3>
-                    <p>Distribution of issues by category.</p>
+                    <h3>{t("categoryWiseComplaints")}</h3>
+
+                    <p>{t("categoryDistribution")}</p>
                   </div>
                 </div>
                 <div className="chart-wrap" style={{ display: 'flex', alignItems: 'center', gap: 16, height: '100%' }}>
@@ -135,8 +152,9 @@ const MpDashboard = () => {
                     <Users size={18} />
                   </div>
                   <div>
-                    <h3>Village-wise complaints</h3>
-                    <p>Top villages generating grievances.</p>
+                    <h3>{t("villageWiseComplaints")}</h3>
+
+                    <p>{t("topVillages")}</p>
                   </div>
                 </div>
                 <div className="chart-wrap">
@@ -159,8 +177,9 @@ const MpDashboard = () => {
                   <BarChart3 size={18} />
                 </div>
                 <div>
-                  <h3>Subcategory-wise complaints</h3>
-                  <p>Detailed breakdown of recurring service issues.</p>
+                  <h3>{t("subcategoryWiseComplaints")}</h3>
+
+                  <p>{t("recurringIssues")}</p>
                 </div>
               </div>
               <div className="chart-wrap" style={{ height: 320 }}>
@@ -182,8 +201,9 @@ const MpDashboard = () => {
                   <Users size={18} />
                 </div>
                 <div>
-                  <h3>Demand Hotspots</h3>
-                  <p>Villages with the highest complaint concentration.</p>
+                  <h3>{t("demandHotspots")}</h3>
+
+                  <p>{t("highestComplaintVillages")}</p>
                 </div>
               </div>
 
@@ -192,25 +212,27 @@ const MpDashboard = () => {
               ) : hotspotsError ? (
                 <ErrorMessage message={hotspotsError} />
               ) : hotspots.length === 0 ? (
-                <div className="empty-state-card">No demand hotspots available yet.</div>
+                <div className="empty-state-card">{t("noHotspots")}</div>
               ) : (
                 <div className="hotspots-list">
                   {hotspots.map((hotspot) => {
                     const topIssue = hotspot.categories?.reduce((prev, current) => (current.count > prev.count ? current : prev), hotspot.categories?.[0] || { count: 0 });
-                    const priority = hotspot.totalComplaints >= 20 ? { label: 'High Priority', tone: 'priority-high' } : hotspot.totalComplaints >= 10 ? { label: 'Medium Priority', tone: 'priority-medium' } : { label: 'Low Priority', tone: 'priority-low' };
+                    const priority = hotspot.totalComplaints >= 20 ? { label: t("highPriority"), tone: 'priority-high' } : hotspot.totalComplaints >= 10 ? { label: t("mediumPriority"), tone: 'priority-medium' } : { label: t("lowPriority"), tone: 'priority-low' };
 
                     return (
                       <div key={hotspot.village} className="hotspot-card">
                         <div className="hotspot-heading">
                           <div>
                             <h4>📍 {hotspot.village}</h4>
-                            <p>Total Complaints: {hotspot.totalComplaints}</p>
+                            <p>{t("totalComplaintsLabel")}: {hotspot.totalComplaints}</p>
                           </div>
                           <span className={`priority-badge ${priority.tone}`}>{priority.label}</span>
                         </div>
 
                         <div className="hotspot-highlight">
-                          <span className="hotspot-highlight-label">Top Issue</span>
+                          <span className="hotspot-highlight-label">
+                            {t("topIssue")}
+                          </span>
                           <strong>{topIssue?.category || 'N/A'}</strong>
                         </div>
 
@@ -237,7 +259,11 @@ const MpDashboard = () => {
                 </div>
               )}
             </div>
+<div className="chart-card">
+                <h3>{t("mapDemandHotspot")}</h3>
 
+  <ComplaintMap locations={locations} />
+</div>
             <ComplaintTable
               complaints={complaints}
               onView={(id) => navigate(`/mp/complaint/${id}`)}

@@ -6,9 +6,10 @@ import Navbar from '../components/Navbar.jsx';
 import Loading from '../components/Loading.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
-
+import { useTranslation } from "react-i18next";
 const MpComplaintDetail = () => {
   const { id } = useParams();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [complaint, setComplaint] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,11 @@ const MpComplaintDetail = () => {
       setComplaint(detail);
       setStatus(detail?.complaintStatus || 'new');
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Unable to load complaint details.');
+setError(
+  err.response?.data?.message ||
+  err.message ||
+  t("unableToLoadComplaint")
+);
     } finally {
       setLoading(false);
     }
@@ -46,10 +51,14 @@ const MpComplaintDetail = () => {
     try {
       setSaving(true);
       await apiClient.put(`/mp/complaint/${id}/status`, { complaintStatus: status });
-      setToast('Complaint status updated successfully.');
+setToast(t("statusUpdated"));
       await loadComplaint();
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Unable to update complaint status.');
+      setError(
+  err.response?.data?.message ||
+  err.message ||
+  t("unableToUpdateStatus")
+);
     } finally {
       setSaving(false);
     }
@@ -58,12 +67,13 @@ const MpComplaintDetail = () => {
   return (
     <div className="detail-page">
       <div className="dashboard-inner">
-        <Navbar
-          title="MP Dashboard"
-          subtitle="Review and act on citizen grievances"
+       <Navbar
+title={t("mpDashboard")}
+subtitle={t("mpSubtitle")}
           actions={
             <button type="button" className="btn btn-outline" onClick={() => navigate('/mp')}>
-              <ArrowLeft size={16} /> Back to dashboard
+            <ArrowLeft size={16} />
+{t("backToDashboard")}
             </button>
           }
         />
@@ -71,7 +81,7 @@ const MpComplaintDetail = () => {
         {error && <ErrorMessage message={error} />}
 
         {loading ? (
-          <Loading label="Loading complaint details…" />
+       <Loading label={t("loadingComplaint")} />
         ) : complaint ? (
           <div className="detail-card-grid">
             <div className="detail-card">
@@ -80,25 +90,25 @@ const MpComplaintDetail = () => {
                   <UserRound size={18} />
                 </div>
                 <div>
-                  <h3>Citizen details</h3>
-                  <p>Profile information tied to this grievance.</p>
+                {t("citizenDetails")}
+                {t("citizenDetailsDesc")}
                 </div>
               </div>
               <div className="detail-list">
                 <div className="detail-item">
-                  <strong>Name</strong>
+                  <strong>{t("name")}</strong>
                   <span>{complaint.userId?.name || 'Not available'}</span>
                 </div>
                 <div className="detail-item">
-                  <strong>Village</strong>
+                  <strong>{t("village")}</strong>
                   <span>{complaint.userId?.village || complaint.village || 'Not available'}</span>
                 </div>
                 <div className="detail-item">
-                  <strong>District</strong>
-                  <span>{complaint.userId?.district || 'Not available'}</span>
+                  <strong>{t("district")}</strong>
+                  <span>{complaint.userId?.district || t("notAvailable")}</span>
                 </div>
                 <div className="detail-item">
-                  <strong>Complaint ID</strong>
+                  <strong>{t("complaintId")}</strong>
                   <span>{complaint._id}</span>
                 </div>
               </div>
@@ -110,8 +120,8 @@ const MpComplaintDetail = () => {
                   <FileText size={18} />
                 </div>
                 <div>
-                  <h3>Original complaint</h3>
-                  <p>Citizen’s submitted grievance text.</p>
+                {t("originalComplaint")}
+                {t("originalComplaintDesc")}
                 </div>
               </div>
               <p style={{ color: '#334155', lineHeight: 1.7 }}>{complaint.originalComplaint}</p>
@@ -123,33 +133,33 @@ const MpComplaintDetail = () => {
                   <Sparkles size={18} />
                 </div>
                 <div>
-                  <h3>AI analysis</h3>
-                  <p>Structured insights generated for the complaint.</p>
+                {t("aiAnalysis")}
+                {t("aiAnalysisDesc")}
                 </div>
               </div>
               <div className="detail-list">
                 <div className="detail-item">
-                  <strong>Category</strong>
+                  <strong>{t("category")}</strong>
                   <span>{complaint.aiResponse?.category || 'Not available'}</span>
                 </div>
                 <div className="detail-item">
-                  <strong>Subcategory</strong>
+                  <strong>{t("subcategory")}</strong>
                   <span>{complaint.aiResponse?.subcategory || 'Not available'}</span>
                 </div>
                 <div className="detail-item">
-                  <strong>Summary</strong>
+                  <strong>{t("summary")}</strong>
                   <span>{complaint.aiResponse?.summary || 'Not available'}</span>
                 </div>
                 <div className="detail-item">
-                  <strong>Urgency</strong>
+                  <strong>{t("urgency")}</strong>
                   <span>{complaint.aiResponse?.urgency || 'Not available'}</span>
                 </div>
                 <div className="detail-item">
-                  <strong>Confidence</strong>
+                  <strong>{t("confidence")}</strong>
                   <span>{complaint.aiResponse?.confidence ?? 'Not available'}</span>
                 </div>
                 <div className="detail-item">
-                  <strong>Status</strong>
+                  <strong>{t("status")}</strong>
                   <StatusBadge status={complaint.complaintStatus || complaint.status} />
                 </div>
               </div>
@@ -161,19 +171,19 @@ const MpComplaintDetail = () => {
                   <ShieldCheck size={18} />
                 </div>
                 <div>
-                  <h3>Update complaint status</h3>
-                  <p>Assign a new disposition for this grievance.</p>
+                  <h3>{t("updateComplaintStatus")}</h3>
+                  <p>{t("updateComplaintStatusDesc")}.</p>
                 </div>
               </div>
               <div className="detail-form">
                 <select value={status} onChange={(event) => setStatus(event.target.value)}>
-                  <option value="new">New</option>
-                  <option value="in-progress">In Progress</option>
-                  <option value="resolved">Resolved</option>
-                  <option value="rejected">Rejected</option>
+                  <option value="new">{t("new")}</option>
+                  <option value="in-progress">{t("inProgress")}</option>
+                  <option value="resolved">{t("resolved")}</option>
+                  <option value="rejected">{t("rejected")}</option>
                 </select>
                 <button type="button" className="btn btn-primary" onClick={handleStatusUpdate} disabled={saving}>
-                  {saving ? 'Updating…' : 'Update Status'}
+                 {saving ? t("updating") : t("updateStatus")}
                 </button>
               </div>
             </div>

@@ -1,5 +1,8 @@
+import { useTranslation } from "react-i18next";
 const ComplaintTable = ({ complaints, onView }) => {
+  const { t } = useTranslation();
   const getStatusBadge = (status) => {
+
     switch (status) {
       case 'new':
         return { label: 'New', color: '#2563eb', background: '#dbeafe' };
@@ -13,7 +16,7 @@ const ComplaintTable = ({ complaints, onView }) => {
   if (!complaints.length) {
     return (
       <div style={{ background: '#ffffff', borderRadius: '16px', padding: '24px', textAlign: 'center', color: '#64748b', boxShadow: '0 10px 30px rgba(15, 23, 42, 0.08)' }}>
-        No actionable complaints found.
+      {t("noComplaints")}
       </div>
     );
   }
@@ -23,13 +26,13 @@ const ComplaintTable = ({ complaints, onView }) => {
       <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
         <thead>
           <tr style={{ background: '#f8fafc', color: '#334155' }}>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>Complaint ID</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>Village</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>Category</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>Urgency</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>Progress</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>Created Date</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>Action</th>
+            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("complaintId")}</th>
+            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("village")}</th>
+            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("category")}</th>
+            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("urgency")}</th>
+            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("status")}</th>
+            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("date")}</th>
+            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("action")}</th>
           </tr>
         </thead>
         <tbody>
@@ -73,7 +76,7 @@ const ComplaintTable = ({ complaints, onView }) => {
                       fontWeight: 600,
                     }}
                   >
-                    View
+{t("view")}
                   </button>
                 </td>
               </tr>

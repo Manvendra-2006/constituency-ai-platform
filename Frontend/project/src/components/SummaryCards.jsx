@@ -1,9 +1,13 @@
+  import { useTranslation } from "react-i18next";
 const SummaryCards = ({ total, analyzed, pending }) => {
-  const cards = [
-    { label: 'Total Complaints', value: total, tone: '#2563eb' },
-    { label: 'Analyzed Complaints', value: analyzed, tone: '#16a34a' },
-    { label: 'Pending Complaints', value: pending, tone: '#f59e0b' },
-  ];
+  const { t } = useTranslation();
+  
+const cards = [
+  { label: t("totalComplaints"), value: total, tone: "#2563eb" },
+  { label: t("analyzedComplaints"), value: analyzed, tone: "#16a34a" },
+  { label: t("pendingComplaints"), value: pending, tone: "#f59e0b" },
+];
+  
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>

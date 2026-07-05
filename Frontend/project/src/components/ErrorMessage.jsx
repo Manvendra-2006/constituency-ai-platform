@@ -1,8 +1,13 @@
-const ErrorMessage = ({ message }) => (
-  <div className="error-state">
-    <h3>We could not load this view</h3>
-    <p>{message}</p>
-  </div>
-);
+import { useTranslation } from "react-i18next";
+const ErrorMessage = ({ message }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="error-state">
+      <h3>{t("errorTitle")}</h3>
+      <p>{message}</p>
+    </div>
+  );
+};
 
 export default ErrorMessage;

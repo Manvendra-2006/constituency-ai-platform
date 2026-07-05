@@ -12,7 +12,6 @@ import UserRegister from './pages/UserRegister.jsx';
 import MpLogin from './pages/MpLogin.jsx';
 import MpRegister from './pages/MpRegister.jsx';
 import Loading from './components/Loading.jsx';
-
 const HomeRedirect = () => {
   const { isAuthenticated, user, isAuthReady } = useAuth();
 

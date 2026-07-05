@@ -4,8 +4,9 @@ import apiClient from '../api/axios.js';
 import Navbar from '../components/Navbar.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import Loading from '../components/Loading.jsx';
-
+import { useTranslation } from "react-i18next";
 const MpInsights = () => {
+  const { t } = useTranslation();
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -18,7 +19,11 @@ const MpInsights = () => {
         const response = await apiClient.get('/mp/dashboard/insights');
         setInsights(response.data || null);
       } catch (err) {
-        setError(err.response?.data?.message || err.message || 'Unable to load AI insights.');
+       setError(
+  err.response?.data?.message ||
+  err.message ||
+  t("unableToLoadInsights")
+);
       } finally {
         setLoading(false);
       }
@@ -48,7 +53,10 @@ const MpInsights = () => {
   return (
     <div className="dashboard-shell">
       <div className="dashboard-inner">
-        <Navbar title="AI Insights" subtitle="Gemini-powered civic intelligence" />
+<Navbar
+  title={t("aiInsights")}
+  subtitle={t("aiInsightsSubtitle")}
+/>
 
         {error ? <ErrorMessage message={error} /> : null}
 
@@ -57,10 +65,10 @@ const MpInsights = () => {
             <div>
               <div className="insights-eyebrow">
                 <Sparkles size={16} />
-                AI-powered recommendations
+             {t("aiPoweredRecommendations")}
               </div>
-              <h2>🤖 AI Insights</h2>
-              <p>Actionable guidance for priority grievances and hotspot areas.</p>
+            <h2>🤖 {t("aiInsights")}</h2>
+<p>{t("insightsDescription")}</p>
             </div>
           </div>
 
@@ -73,7 +81,9 @@ const MpInsights = () => {
                   <Compass size={18} />
                 </div>
                 <div>
-                  <p className="insight-label">Top Village</p>
+<p className="insight-label">
+  {t("topVillage")}
+</p>
                   <h3>{insights?.topVillage || '—'}</h3>
                 </div>
               </div>
@@ -83,7 +93,9 @@ const MpInsights = () => {
                   <TrendingUp size={18} />
                 </div>
                 <div>
-                  <p className="insight-label">Top Category</p>
+               <p className="insight-label">
+  {t("topCategory")}
+</p>
                   <h3>{insights?.topCategory || '—'}</h3>
                 </div>
               </div>
@@ -93,7 +105,9 @@ const MpInsights = () => {
                   <MessageSquareWarning size={18} />
                 </div>
                 <div>
-                  <p className="insight-label">High Urgency Complaints</p>
+                <p className="insight-label">
+  {t("highUrgencyComplaints")}
+</p>
                   <h3>{insights?.highUrgencyComplaints ?? '—'}</h3>
                 </div>
               </div>
@@ -103,8 +117,10 @@ const MpInsights = () => {
                   <BrainCircuit size={18} />
                 </div>
                 <div>
-                  <p className="insight-label">AI Recommendation</p>
-                  <p className="insight-recommendation">{insights?.recommendation || 'No recommendation available yet.'}</p>
+                 <p className="insight-label">
+  {t("aiRecommendation")}
+</p>
+                  <p className="insight-recommendation">{insights?.recommendation || 't("noRecommendation").'}</p>
                 </div>
               </div>
             </div>

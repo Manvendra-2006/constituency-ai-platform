@@ -33,45 +33,106 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="page-container">
-      <div className="auth-form">
-        <h1>User Login</h1>
+    <div className="min-h-screen bg-[#F3F1EA] text-[#1A1A1A] font-serif">
 
-        <form onSubmit={handleSubmit}>
-          <label>
-            Email
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </label>
+      {/* Tricolor strip */}
+      <div className="h-1.5 w-full flex">
+        <div className="flex-1 bg-[#FF9933]" />
+        <div className="flex-1 bg-white" />
+        <div className="flex-1 bg-[#138808]" />
+      </div>
 
-          <label>
-            Password
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </label>
+      {/* Official header */}
+      <header className="bg-[#0B3D62] text-white border-b-4 border-[#8B1E23]">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
+          <div className="w-11 h-11 rounded-full border-2 border-[#FFD34D] flex items-center justify-center text-xs font-bold shrink-0">
+            GoI
+          </div>
+          <div>
+            <p className="text-[10px] tracking-widest uppercase text-[#FFD34D]">
+              CivicPulse · Citizen Portal
+            </p>
+            <h1 className="text-lg sm:text-xl font-bold leading-tight">
+              Grievance Redressal System
+            </h1>
+          </div>
+        </div>
+      </header>
 
-          {error && <div className="error-message">{error}</div>}
+      <div className="max-w-md mx-auto px-4 py-12">
 
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Signing in...' : 'Sign in'}
-          </button>
-        </form>
+        <div className="border border-[#0B3D62]/30 bg-white">
+          <div className="bg-[#0B3D62]/5 border-b border-[#0B3D62]/30 px-6 py-4 text-center">
+            <h2 className="text-xl font-bold text-[#0B3D62] uppercase tracking-wide">
+              User Login
+            </h2>
+            <p className="text-xs text-[#5A5A5A] mt-1">
+              Sign in to access your citizen dashboard
+            </p>
+          </div>
 
-        <p>
-          Need an account? <Link to="/register">Register as user</Link>
-        </p>
-        <p>
-          MP? <Link to="/mp/login">MP login</Link>
+          <form onSubmit={handleSubmit} className="px-6 py-6 space-y-5">
+            <label className="block">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#3A3A3A]">
+                Email
+              </span>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full mt-1 px-3 py-2 text-sm border border-[#0B3D62]/30 bg-white focus:outline-none focus:border-[#0B3D62] rounded-none"
+              />
+            </label>
+
+            <label className="block">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#3A3A3A]">
+                Password
+              </span>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="w-full mt-1 px-3 py-2 text-sm border border-[#0B3D62]/30 bg-white focus:outline-none focus:border-[#0B3D62] rounded-none"
+              />
+            </label>
+
+            {error && (
+              <div className="text-sm text-[#8B1E23] border border-[#8B1E23]/40 bg-[#8B1E23]/5 px-3 py-2">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-2.5 text-sm font-semibold uppercase tracking-wide bg-[#0B3D62] text-white hover:bg-[#0B3D62]/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSubmitting ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+
+          <div className="border-t border-dashed border-[#0B3D62]/20 px-6 py-4 text-center space-y-1">
+            <p className="text-xs text-[#5A5A5A]">
+              Need an account?{' '}
+              <Link to="/register" className="text-[#0B3D62] font-semibold hover:underline">
+                Register as user
+              </Link>
+            </p>
+            <p className="text-xs text-[#5A5A5A]">
+              MP?{' '}
+              <Link to="/mp/login" className="text-[#0B3D62] font-semibold hover:underline">
+                MP login
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        <p className="text-center text-[10px] text-[#5A5A5A] mt-6">
+          This is a system-generated portal. For official use only.
         </p>
       </div>
     </div>

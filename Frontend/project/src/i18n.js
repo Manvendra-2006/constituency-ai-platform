@@ -216,7 +216,8 @@ loadingAnalytics: "Loading analytics...",
 
 mpDashboard: "MP Dashboard",
 mpDashboardSubtitle: "Monitor complaints and AI insights",
-  mapDemandHotspot: "Map Demand Hotspot"
+  mapDemandHotspot: "Map Demand Hotspot",
+  viewProfile: "View Profile"
 
     }
   },
@@ -289,6 +290,7 @@ mpDashboardSubtitle: "Monitor complaints and AI insights",
       errorTitle: "यह पृष्ठ लोड नहीं किया जा सका",
       dashboard: "डैशबोर्ड",
       aiInsights: "एआई इनसाइट्स",
+      viewProfile: "प्रोफ़ाइल देखें",
       logout: "लॉगआउट",
       user: "उपयोगकर्ता",
       trackComplaints: "सभी शिकायतों को एक ही स्थान पर ट्रैक करें।",

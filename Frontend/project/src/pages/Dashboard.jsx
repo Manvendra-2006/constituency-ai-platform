@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar.jsx';
 import SummaryCards from '../components/SummaryCards.jsx';
 import apiClient from '../api/axios.js';
 import { useTranslation } from "react-i18next";
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -19,11 +20,11 @@ const Dashboard = () => {
       const response = await apiClient.get('/user/complaint/mycomplaints');
       setComplaints(response.data?.complaints || []);
     } catch (err) {
-     setError(
-  err.response?.data?.message ||
-  err.message ||
-  t("unableToLoadComplaints")
-);
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        t("unableToLoadComplaints")
+      );
     } finally {
       setLoading(false);
     }
@@ -39,41 +40,72 @@ const Dashboard = () => {
   const pending = complaints.filter((item) => getAiStatus(item) === 'pending').length;
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%)', padding: '24px' }}>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="min-h-screen bg-[#F3F1EA] text-[#1A1A1A] font-serif">
+
+      {/* Tricolor strip */}
+      <div className="h-1.5 w-full flex">
+        <div className="flex-1 bg-[#FF9933]" />
+        <div className="flex-1 bg-white" />
+        <div className="flex-1 bg-[#138808]" />
+      </div>
+
+      {/* Official header */}
+      <header className="bg-[#0B3D62] text-white border-b-4 border-[#8B1E23]">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-4">
+          <div className="w-11 h-11 rounded-full border-2 border-[#FFD34D] flex items-center justify-center text-xs font-bold shrink-0">
+            GoI
+          </div>
+          <div>
+            <p className="text-[10px] tracking-widest uppercase text-[#FFD34D]">
+              CivicPulse · Citizen Portal
+            </p>
+            <h1 className="text-lg sm:text-xl font-bold leading-tight">
+              {t("yourComplaints") || "Dashboard"}
+            </h1>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-6xl mx-auto px-4 py-8">
+
         <Navbar />
 
         {error && (
-          <div style={{ marginBottom: '16px', padding: '12px 14px', borderRadius: '12px', background: '#fee2e2', color: '#b91c1c' }}>
+          <div className="mb-4 text-sm text-[#8B1E23] border border-[#8B1E23]/40 bg-[#8B1E23]/5 px-4 py-3">
             {error}
           </div>
         )}
 
         <SummaryCards total={total} analyzed={analyzed} pending={pending} />
 
-        <div style={{ background: '#ffffff', borderRadius: '18px', padding: '20px', boxShadow: '0 12px 35px rgba(15, 23, 42, 0.08)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-          <h2 style={{ margin: 0, color: '#0f172a' }}>
-  {t("yourComplaints")}
-</h2>
+        <div className="border border-[#0B3D62]/30 bg-white mt-6">
+          <div className="bg-[#0B3D62]/5 border-b border-[#0B3D62]/30 px-6 py-4 flex items-center justify-between flex-wrap gap-3">
+            <h2 className="text-lg font-bold text-[#0B3D62] uppercase tracking-wide">
+              {t("yourComplaints")}
+            </h2>
             <button
               type="button"
               onClick={() => navigate('/add-complaint')}
-              style={{ border: 'none', background: '#0f766e', color: '#ffffff', padding: '10px 14px', borderRadius: '999px', cursor: 'pointer', fontWeight: 600 }}
+              className="text-xs font-semibold uppercase tracking-wide px-4 py-2 border border-[#0B3D62] text-[#0B3D62] hover:bg-[#0B3D62] hover:text-white transition-colors"
             >
-             + {t("newComplaint")}
+              + {t("newComplaint")}
             </button>
           </div>
 
-          {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>
-              <div style={{ width: '36px', height: '36px', border: '4px solid #cbd5e1', borderTopColor: '#2563eb', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-            </div>
-          ) : (
-            <ComplaintTable complaints={complaints} compact />
-          )}
+          <div className="px-6 py-6">
+            {loading ? (
+              <div className="flex justify-center py-10">
+                <div className="w-9 h-9 border-4 border-[#0B3D62]/20 border-t-[#0B3D62] rounded-full animate-spin" />
+              </div>
+            ) : (
+              <ComplaintTable complaints={complaints} compact />
+            )}
+          </div>
         </div>
+
+        <p className="text-center text-[10px] text-[#5A5A5A] mt-6">
+          This is a system-generated portal. For official use only.
+        </p>
       </div>
     </div>
   );

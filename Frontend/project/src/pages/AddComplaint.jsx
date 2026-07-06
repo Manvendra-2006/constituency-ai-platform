@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/axios.js';
 import { useVoiceComplaint } from '../hooks/useVoiceComplaint.js';
 import { useTranslation } from "react-i18next";
+
 const AddComplaint = () => {
-   const { t } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ village: '', originalComplaint: '' });
   const [error, setError] = useState('');
@@ -14,11 +15,11 @@ const AddComplaint = () => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [location, setLocation] = useState({
-  latitude: null,
-  longitude: null,
-});
+    latitude: null,
+    longitude: null,
+  });
   const isManualEditRef = useRef(false);
-  
+
   const { transcript, listening, voiceError, browserSupportsSpeechRecognition, startVoiceCapture, stopVoiceCapture, clearVoiceCapture } = useVoiceComplaint();
 
   useEffect(() => {
@@ -40,26 +41,27 @@ const AddComplaint = () => {
   }, [image]);
 
   useEffect(() => {
-  if (!navigator.geolocation) {
-    console.log("Geolocation is not supported.");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      setLocation({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      });
-    },
-    (error) => {
-      console.log(error);
-    },
-    {
-      enableHighAccuracy: true,
+    if (!navigator.geolocation) {
+      console.log("Geolocation is not supported.");
+      return;
     }
-  );
-}, []);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.log(error);
+      },
+      {
+        enableHighAccuracy: true,
+      }
+    );
+  }, []);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     isManualEditRef.current = name === 'originalComplaint';
@@ -93,12 +95,12 @@ const AddComplaint = () => {
     setSuccess('');
 
     if (!formData.village.trim()) {
-setError(t("villageRequired"));
+      setError(t("villageRequired"));
       return;
     }
 
     if (!formData.originalComplaint.trim() && !image) {
-setError(t("complaintRequired"));
+      setError(t("complaintRequired"));
       return;
     }
 
@@ -108,227 +110,212 @@ setError(t("complaintRequired"));
       const payload = new FormData();
       payload.append('village', formData.village);
       payload.append('originalComplaint', formData.originalComplaint);
-payload.append("latitude", location.latitude);
-payload.append("longitude", location.longitude);
+      payload.append("latitude", location.latitude);
+      payload.append("longitude", location.longitude);
       if (image) {
         payload.append('image', image);
       }
 
       await apiClient.post('/user/complaint', payload);
-    setSuccess(t("submitSuccess"));
+      setSuccess(t("submitSuccess"));
       setTimeout(() => {
         navigate('/dashboard');
       }, 1000);
     } catch (err) {
-setError(
-  err.response?.data?.message ||
-  err.message ||
-  t("submitFailed")
-);;
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        t("submitFailed")
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%)', padding: '24px' }}>
-      <div style={{ maxWidth: '760px', margin: '0 auto', background: '#ffffff', borderRadius: '20px', padding: '24px', boxShadow: '0 12px 35px rgba(15, 23, 42, 0.08)' }}>
-<button
-  type="button"
-  onClick={() => navigate("/dashboard")}
-  style={{
-    border: "none",
-    background: "transparent",
-    color: "#2563eb",
-    cursor: "pointer",
-    fontWeight: 600,
-    padding: 0,
-    marginBottom: "16px",
-  }}
->
-  ← {t("backToDashboard")}
-</button>
+    <div className="min-h-screen bg-[#F3F1EA] text-[#1A1A1A] font-serif">
 
-<h1 style={{ marginTop: 0, color: "#0f172a" }}>
-  {t("addComplaint")}
-</h1>
-
-<p style={{ color: "#64748b", marginBottom: "20px" }}>
-  {t("shareConcern")}
-</p>
-
-<form onSubmit={handleSubmit} style={{ display: "grid", gap: "16px" }}>
-  <label
-    style={{
-      display: "grid",
-      gap: "8px",
-      color: "#334155",
-      fontWeight: 600,
-    }}
-  >
-    {t("village")}
-    <input
-      type="text"
-      name="village"
-      value={formData.village}
-      onChange={handleChange}
-      required
-      style={{
-        border: "1px solid #cbd5e1",
-        borderRadius: "12px",
-        padding: "10px 12px",
-        fontSize: "15px",
-      }}
-    />
-  </label>
-
-  <label
-    style={{
-      display: "grid",
-      gap: "8px",
-      color: "#334155",
-      fontWeight: 600,
-    }}
-  >
-    {t("complaintDescription")}
-
-    <div style={{ display: "grid", gap: "8px" }}>
-      <div
-        className="voice-toolbar"
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "10px",
-          alignItems: "center",
-        }}
-      >
-        <button
-          type="button"
-          onClick={handleStartVoiceCapture}
-          disabled={listening || !browserSupportsSpeechRecognition}
-        >
-          <Mic size={16} />
-          {t("startRecording")}
-        </button>
-
-        <button
-          type="button"
-          onClick={handleStopVoiceCapture}
-          disabled={!listening}
-        >
-          <Square size={14} />
-          {t("stopRecording")}
-        </button>
-
-        <button
-          type="button"
-          onClick={handleClearVoice}
-          disabled={!formData.originalComplaint && !transcript}
-        >
-          <Trash2 size={15} />
-          {t("clear")}
-        </button>
-
-        {listening && (
-          <span>
-            {t("listening")}
-          </span>
-        )}
+      {/* Tricolor strip */}
+      <div className="h-1.5 w-full flex">
+        <div className="flex-1 bg-[#FF9933]" />
+        <div className="flex-1 bg-white" />
+        <div className="flex-1 bg-[#138808]" />
       </div>
 
-      <textarea
-        name="originalComplaint"
-        value={formData.originalComplaint}
-        onChange={handleChange}
-        rows="6"
-        placeholder={t("complaintPlaceholder")}
-      />
-
-      <label style={{ fontWeight: 600 }}>
-        {t("uploadImage")}
-      </label>
-
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-      />
-
-      <small style={{ color: "#64748b" }}>
-        {t("imageNote")}
-      </small>
-
-      {imagePreview && (
-        <div style={{ display: "grid", gap: "8px" }}>
-          <img
-            src={imagePreview}
-          alt={t("complaintPreview")}
-            style={{
-              width: "100%",
-              maxHeight: "300px",
-              objectFit: "cover",
-              borderRadius: "12px",
-            }}
-          />
+      {/* Official header */}
+      <header className="bg-[#0B3D62] text-white border-b-4 border-[#8B1E23]">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
+          <div className="w-11 h-11 rounded-full border-2 border-[#FFD34D] flex items-center justify-center text-xs font-bold shrink-0">
+            GoI
+          </div>
           <div>
-  {t("selectedImage")}: {image?.name}
-</div>
+            <p className="text-[10px] tracking-widest uppercase text-[#FFD34D]">
+              CivicPulse · Citizen Portal
+            </p>
+            <h1 className="text-lg sm:text-xl font-bold leading-tight">
+              {t("addComplaint")}
+            </h1>
+          </div>
         </div>
-      )}
+      </header>
 
-      {!browserSupportsSpeechRecognition && (
-        <div>
-          {voiceError || t("speechNotSupported")}
+      <div className="max-w-2xl mx-auto px-4 py-8">
+
+        <button
+          type="button"
+          onClick={() => navigate("/dashboard")}
+          className="text-sm font-semibold text-[#0B3D62] hover:underline mb-4 inline-block"
+        >
+          ← {t("backToDashboard")}
+        </button>
+
+        <div className="border border-[#0B3D62]/30 bg-white">
+          <div className="bg-[#0B3D62]/5 border-b border-[#0B3D62]/30 px-6 py-4">
+            <h2 className="text-xl font-bold text-[#0B3D62] uppercase tracking-wide">
+              {t("addComplaint")}
+            </h2>
+            <p className="text-xs text-[#5A5A5A] mt-1">
+              {t("shareConcern")}
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="px-6 py-6 space-y-5">
+
+            <label className="block">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#3A3A3A]">
+                {t("village")}
+              </span>
+              <input
+                type="text"
+                name="village"
+                value={formData.village}
+                onChange={handleChange}
+                required
+                className="w-full mt-1 px-3 py-2 text-sm border border-[#0B3D62]/30 bg-white focus:outline-none focus:border-[#0B3D62] rounded-none"
+              />
+            </label>
+
+            <div className="block">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#3A3A3A]">
+                {t("complaintDescription")}
+              </span>
+
+              <div className="mt-2 space-y-3">
+
+                <div className="flex flex-wrap gap-2 items-center">
+                  <button
+                    type="button"
+                    onClick={handleStartVoiceCapture}
+                    disabled={listening || !browserSupportsSpeechRecognition}
+                    className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide px-3 py-1.5 border border-[#0B3D62] text-[#0B3D62] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#0B3D62] hover:text-white transition-colors"
+                  >
+                    <Mic size={14} />
+                    {t("startRecording")}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleStopVoiceCapture}
+                    disabled={!listening}
+                    className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide px-3 py-1.5 border border-[#8B1E23] text-[#8B1E23] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#8B1E23] hover:text-white transition-colors"
+                  >
+                    <Square size={12} />
+                    {t("stopRecording")}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleClearVoice}
+                    disabled={!formData.originalComplaint && !transcript}
+                    className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide px-3 py-1.5 border border-[#0B3D62]/30 text-[#5A5A5A] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#0B3D62]/10 transition-colors"
+                  >
+                    <Trash2 size={13} />
+                    {t("clear")}
+                  </button>
+
+                  {listening && (
+                    <span className="text-xs font-semibold text-[#8B1E23] animate-pulse">
+                      {t("listening")}
+                    </span>
+                  )}
+                </div>
+
+                <textarea
+                  name="originalComplaint"
+                  value={formData.originalComplaint}
+                  onChange={handleChange}
+                  rows="6"
+                  placeholder={t("complaintPlaceholder")}
+                  className="w-full px-3 py-2 text-sm border border-[#0B3D62]/30 bg-white focus:outline-none focus:border-[#0B3D62] rounded-none"
+                />
+
+                <label className="block">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-[#3A3A3A]">
+                    {t("uploadImage")}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="block w-full mt-1 text-xs text-[#5A5A5A] file:mr-3 file:py-1.5 file:px-3 file:border file:border-[#0B3D62] file:text-xs file:font-semibold file:uppercase file:bg-white file:text-[#0B3D62] hover:file:bg-[#0B3D62] hover:file:text-white file:cursor-pointer"
+                  />
+                  <small className="block text-[11px] text-[#5A5A5A] mt-1">
+                    {t("imageNote")}
+                  </small>
+                </label>
+
+                {imagePreview && (
+                  <div className="space-y-2">
+                    <img
+                      src={imagePreview}
+                      alt={t("complaintPreview")}
+                      className="w-full max-h-72 object-cover border border-[#0B3D62]/30"
+                    />
+                    <div className="text-xs text-[#5A5A5A]">
+                      {t("selectedImage")}: {image?.name}
+                    </div>
+                  </div>
+                )}
+
+                {!browserSupportsSpeechRecognition && (
+                  <div className="text-xs text-[#8B1E23]">
+                    {voiceError || t("speechNotSupported")}
+                  </div>
+                )}
+
+                {browserSupportsSpeechRecognition && voiceError && (
+                  <div className="text-sm text-[#8B1E23] border border-[#8B1E23]/40 bg-[#8B1E23]/5 px-3 py-2">
+                    {voiceError}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {error && (
+              <div className="text-sm text-[#8B1E23] border border-[#8B1E23]/40 bg-[#8B1E23]/5 px-3 py-2">
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="text-sm text-[#138808] border border-[#138808]/40 bg-[#138808]/5 px-3 py-2">
+                {success}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-2.5 text-sm font-semibold uppercase tracking-wide bg-[#0B3D62] text-white hover:bg-[#0B3D62]/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSubmitting ? t("submitting") : t("submitComplaint")}
+            </button>
+          </form>
         </div>
-      )}
 
-   {browserSupportsSpeechRecognition && voiceError && (
-  <div
-    style={{
-      background: "#fee2e2",
-      color: "#b91c1c",
-      padding: "10px",
-      borderRadius: "8px",
-    }}
-  >
-    {voiceError}
-  </div>
-)}
-    </div>
-  </label>
-
-{error && (
-  <div
-    style={{
-      background: "#fee2e2",
-      color: "#b91c1c",
-      padding: "12px",
-      borderRadius: "10px",
-      fontWeight: 500,
-    }}
-  >
-    {error}
-  </div>
-)}
-
-  {success && (
-  <div
-    style={{
-      background: "#dcfce7",
-      color: "#166534",
-      padding: "12px",
-      borderRadius: "10px",
-      fontWeight: 500,
-    }}
-  >
-    {success}
-  </div>
-)}
-
-  <button type="submit" disabled={isSubmitting}>
-    {isSubmitting ? t("submitting") : t("submitComplaint")}
-  </button>
-</form>
+        <p className="text-center text-[10px] text-[#5A5A5A] mt-6">
+          This is a system-generated portal. For official use only.
+        </p>
       </div>
     </div>
   );

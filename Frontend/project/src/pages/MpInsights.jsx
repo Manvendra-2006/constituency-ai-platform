@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { BrainCircuit, Compass, MessageSquareWarning, Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { BrainCircuit, Compass, MessageSquareWarning, Sparkles, TrendingUp } from 'lucide-react';
 import apiClient from '../api/axios.js';
 import Navbar from '../components/Navbar.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
-import Loading from '../components/Loading.jsx';
 import { useTranslation } from "react-i18next";
+
 const MpInsights = () => {
   const { t } = useTranslation();
   const [insights, setInsights] = useState(null);
@@ -19,11 +19,11 @@ const MpInsights = () => {
         const response = await apiClient.get('/mp/dashboard/insights');
         setInsights(response.data || null);
       } catch (err) {
-       setError(
-  err.response?.data?.message ||
-  err.message ||
-  t("unableToLoadInsights")
-);
+        setError(
+          err.response?.data?.message ||
+          err.message ||
+          t("unableToLoadInsights")
+        );
       } finally {
         setLoading(false);
       }
@@ -32,100 +32,109 @@ const MpInsights = () => {
     fetchInsights();
   }, []);
 
-  const renderSkeleton = () => (
-    <div className="insights-grid">
-      {[1, 2, 3].map((item) => (
-        <div key={item} className="insight-card insight-card-skeleton">
-          <div className="skeleton-line short" />
-          <div className="skeleton-line" />
-          <div className="skeleton-line medium" />
+  const SkeletonCard = ({ large }) => (
+    <div className={`border border-[#0B3D62]/20 bg-white p-5 ${large ? "sm:col-span-2" : ""}`}>
+      <div className="h-3 w-1/3 bg-[#0B3D62]/10 animate-pulse mb-3" />
+      <div className="h-4 w-full bg-[#0B3D62]/10 animate-pulse mb-2" />
+      <div className="h-4 w-2/3 bg-[#0B3D62]/10 animate-pulse" />
+    </div>
+  );
+
+  const InsightCard = ({ icon: Icon, label, value, large }) => (
+    <div className={`border border-[#0B3D62]/30 bg-white ${large ? "sm:col-span-2" : ""}`}>
+      <div className="flex items-start gap-3 px-5 py-4">
+        <div className="w-9 h-9 rounded-full border-2 border-[#0B3D62]/40 flex items-center justify-center shrink-0 text-[#0B3D62]">
+          <Icon size={16} />
         </div>
-      ))}
-      <div className="insight-card insight-card-skeleton insight-card-large">
-        <div className="skeleton-line short" />
-        <div className="skeleton-line" />
-        <div className="skeleton-line" />
-        <div className="skeleton-line medium" />
+        <div>
+          <p className="text-[10px] uppercase tracking-wide text-[#5A5A5A]">{label}</p>
+          <p className={`font-bold text-[#0B3D62] mt-1 ${large ? "text-sm leading-relaxed font-normal text-[#3A3A3A]" : "text-lg"}`}>
+            {value}
+          </p>
+        </div>
       </div>
     </div>
   );
 
   return (
-    <div className="dashboard-shell">
-      <div className="dashboard-inner">
-<Navbar
-  title={t("aiInsights")}
-  subtitle={t("aiInsightsSubtitle")}
-/>
+    <div className="min-h-screen bg-[#F3F1EA] text-[#1A1A1A] font-serif">
 
-        {error ? <ErrorMessage message={error} /> : null}
+      {/* Tricolor strip */}
+      <div className="h-1.5 w-full flex">
+        <div className="flex-1 bg-[#FF9933]" />
+        <div className="flex-1 bg-white" />
+        <div className="flex-1 bg-[#138808]" />
+      </div>
 
-        <section className="insights-page">
-          <div className="insights-header">
-            <div>
-              <div className="insights-eyebrow">
-                <Sparkles size={16} />
-             {t("aiPoweredRecommendations")}
-              </div>
-            <h2>🤖 {t("aiInsights")}</h2>
-<p>{t("insightsDescription")}</p>
+      <div className="max-w-5xl mx-auto px-4 py-8">
+
+        <Navbar
+          title={t("aiInsights")}
+          subtitle={t("aiInsightsSubtitle")}
+        />
+
+        {error && (
+          <div className="mt-4">
+            <ErrorMessage message={error} />
+          </div>
+        )}
+
+        <section className="mt-6">
+          <div className="border border-[#0B3D62]/30 bg-white mb-6">
+            <div className="bg-[#0B3D62]/5 border-b border-[#0B3D62]/30 px-5 py-3 flex items-center gap-2">
+              <Sparkles size={14} className="text-[#0B3D62]" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#0B3D62]">
+                {t("aiPoweredRecommendations")}
+              </span>
+            </div>
+            <div className="px-5 py-4">
+              <h2 className="text-lg font-bold text-[#0B3D62] uppercase tracking-wide">
+                {t("aiInsights")}
+              </h2>
+              <p className="text-sm text-[#5A5A5A] mt-1">{t("insightsDescription")}</p>
             </div>
           </div>
 
           {loading ? (
-            renderSkeleton()
+            <div className="grid gap-4 sm:grid-cols-2">
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard large />
+            </div>
           ) : (
-            <div className="insights-grid">
-              <div className="insight-card insight-card-gradient">
-                <div className="insight-icon-wrap blue">
-                  <Compass size={18} />
-                </div>
-                <div>
-<p className="insight-label">
-  {t("topVillage")}
-</p>
-                  <h3>{insights?.topVillage || '—'}</h3>
-                </div>
-              </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <InsightCard
+                icon={Compass}
+                label={t("topVillage")}
+                value={insights?.topVillage || '—'}
+              />
 
-              <div className="insight-card insight-card-gradient">
-                <div className="insight-icon-wrap orange">
-                  <TrendingUp size={18} />
-                </div>
-                <div>
-               <p className="insight-label">
-  {t("topCategory")}
-</p>
-                  <h3>{insights?.topCategory || '—'}</h3>
-                </div>
-              </div>
+              <InsightCard
+                icon={TrendingUp}
+                label={t("topCategory")}
+                value={insights?.topCategory || '—'}
+              />
 
-              <div className="insight-card insight-card-gradient">
-                <div className="insight-icon-wrap purple">
-                  <MessageSquareWarning size={18} />
-                </div>
-                <div>
-                <p className="insight-label">
-  {t("highUrgencyComplaints")}
-</p>
-                  <h3>{insights?.highUrgencyComplaints ?? '—'}</h3>
-                </div>
-              </div>
+              <InsightCard
+                icon={MessageSquareWarning}
+                label={t("highUrgencyComplaints")}
+                value={insights?.highUrgencyComplaints ?? '—'}
+              />
 
-              <div className="insight-card insight-card-large insight-card-glow">
-                <div className="insight-icon-wrap green">
-                  <BrainCircuit size={18} />
-                </div>
-                <div>
-                 <p className="insight-label">
-  {t("aiRecommendation")}
-</p>
-                  <p className="insight-recommendation">{insights?.recommendation || 't("noRecommendation").'}</p>
-                </div>
-              </div>
+              <InsightCard
+                icon={BrainCircuit}
+                label={t("aiRecommendation")}
+                value={insights?.recommendation || t("noRecommendation")}
+                large
+              />
             </div>
           )}
         </section>
+
+        <p className="text-center text-[10px] text-[#5A5A5A] mt-8">
+          This is a system-generated record. For official use only.
+        </p>
       </div>
     </div>
   );

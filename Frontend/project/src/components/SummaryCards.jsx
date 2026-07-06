@@ -1,33 +1,27 @@
-  import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
+
 const SummaryCards = ({ total, analyzed, pending }) => {
   const { t } = useTranslation();
-  
-const cards = [
-  { label: t("totalComplaints"), value: total, tone: "#2563eb" },
-  { label: t("analyzedComplaints"), value: analyzed, tone: "#16a34a" },
-  { label: t("pendingComplaints"), value: pending, tone: "#f59e0b" },
-];
-  
+
+  const cards = [
+    { label: t("totalComplaints"), value: total, color: "#0B3D62" },
+    { label: t("analyzedComplaints"), value: analyzed, color: "#138808" },
+    { label: t("pendingComplaints"), value: pending, color: "#8B1E23" },
+  ];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 font-serif">
       {cards.map((card) => (
         <div
           key={card.label}
-          style={{
-            background: '#ffffff',
-            borderRadius: '16px',
-            padding: '20px',
-            boxShadow: '0 10px 30px rgba(15, 23, 42, 0.08)',
-            border: '1px solid #e2e8f0',
-          }}
+          className="border border-[#0B3D62]/30 bg-white px-5 py-4"
         >
-          <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#5A5A5A]">
             {card.label}
-          </div>
-          <div style={{ fontSize: '32px', fontWeight: 700, color: card.tone, marginTop: '8px' }}>
+          </p>
+          <p className="text-3xl font-bold mt-2" style={{ color: card.color }}>
             {card.value}
-          </div>
+          </p>
         </div>
       ))}
     </div>

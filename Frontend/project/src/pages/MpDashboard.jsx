@@ -13,6 +13,7 @@ import ComplaintMap from "../components/ComplaintMap";
 const MpDashboard = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  
   const [analytics, setAnalytics] = useState(null);
   const [complaints, setComplaints] = useState([]);
   const [hotspots, setHotspots] = useState([]);
@@ -224,6 +225,13 @@ const MpDashboard = () => {
                         <div className="hotspot-heading">
                           <div>
                             <h4>📍 {hotspot.village}</h4>
+        <button
+    className="btn btn-primary"
+    style={{ marginTop: "8px", marginBottom: "8px" }}
+    onClick={() => navigate(`/mp/village/${hotspot.village}`)}
+  >
+    {t("viewProfile")}
+  </button>
                             <p>{t("totalComplaintsLabel")}: {hotspot.totalComplaints}</p>
                           </div>
                           <span className={`priority-badge ${priority.tone}`}>{priority.label}</span>

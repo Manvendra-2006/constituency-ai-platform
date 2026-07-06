@@ -1,82 +1,92 @@
 import { useTranslation } from "react-i18next";
+
 const ComplaintTable = ({ complaints, onView }) => {
   const { t } = useTranslation();
-  const getStatusBadge = (status) => {
 
+  const getStatusBadge = (status) => {
     switch (status) {
       case 'new':
-        return { label: 'New', color: '#2563eb', background: '#dbeafe' };
+        return { label: t("new") || 'New', color: '#0B3D62', border: '#0B3D62' };
       case 'in-progress':
-        return { label: 'In Progress', color: '#c2410c', background: '#ffedd5' };
+        return { label: t("inProgress") || 'In Progress', color: '#B8860B', border: '#B8860B' };
+      case 'resolved':
+        return { label: t("resolved") || 'Resolved', color: '#138808', border: '#138808' };
+      case 'rejected':
+        return { label: t("rejected") || 'Rejected', color: '#8B1E23', border: '#8B1E23' };
       default:
-        return { label: status || 'Unknown', color: '#475569', background: '#e2e8f0' };
+        return { label: status || 'Unknown', color: '#5A5A5A', border: '#5A5A5A' };
     }
   };
 
   if (!complaints.length) {
     return (
-      <div style={{ background: '#ffffff', borderRadius: '16px', padding: '24px', textAlign: 'center', color: '#64748b', boxShadow: '0 10px 30px rgba(15, 23, 42, 0.08)' }}>
-      {t("noComplaints")}
+      <div className="border border-dashed border-[#0B3D62]/30 bg-white px-4 py-6 text-center text-sm text-[#5A5A5A] italic font-serif">
+        {t("noComplaints")}
       </div>
     );
   }
 
   return (
-    <div style={{ overflowX: 'auto', background: '#ffffff', borderRadius: '16px', boxShadow: '0 10px 30px rgba(15, 23, 42, 0.08)' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
+    <div className="overflow-x-auto border border-[#0B3D62]/30 bg-white font-serif">
+      <table className="w-full min-w-[900px] border-collapse text-sm">
         <thead>
-          <tr style={{ background: '#f8fafc', color: '#334155' }}>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("complaintId")}</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("village")}</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("category")}</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("urgency")}</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("status")}</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("date")}</th>
-            <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '13px' }}>{t("action")}</th>
+          <tr className="bg-[#0B3D62]/5">
+            {[
+              t("complaintId"),
+              t("village"),
+              t("category"),
+              t("urgency"),
+              t("status"),
+              t("date"),
+              t("action"),
+            ].map((heading) => (
+              <th
+                key={heading}
+                className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-[#0B3D62] border-b border-[#0B3D62]/30"
+              >
+                {heading}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {complaints.map((complaint) => {
+          {complaints.map((complaint, idx) => {
             const badge = getStatusBadge(complaint.complaintStatus);
             return (
-              <tr key={complaint._id} style={{ borderTop: '1px solid #e2e8f0' }}>
-                <td style={{ padding: '14px 16px', color: '#475569', fontFamily: 'monospace' }}>{complaint._id}</td>
-                <td style={{ padding: '14px 16px', color: '#475569' }}>{complaint.village || '—'}</td>
-                <td style={{ padding: '14px 16px', color: '#475569' }}>{complaint.aiResponse?.category || '—'}</td>
-                <td style={{ padding: '14px 16px', color: '#475569' }}>{complaint.aiResponse?.urgency || '—'}</td>
-                <td style={{ padding: '14px 16px' }}>
+              <tr
+                key={complaint._id}
+                className={idx % 2 === 0 ? "bg-white" : "bg-[#0B3D62]/[0.03]"}
+              >
+                <td className="px-4 py-3 border-t border-[#0B3D62]/10 text-[#3A3A3A] font-mono text-xs">
+                  {complaint._id}
+                </td>
+                <td className="px-4 py-3 border-t border-[#0B3D62]/10 text-[#3A3A3A]">
+                  {complaint.village || '—'}
+                </td>
+                <td className="px-4 py-3 border-t border-[#0B3D62]/10 text-[#3A3A3A]">
+                  {complaint.aiResponse?.category || '—'}
+                </td>
+                <td className="px-4 py-3 border-t border-[#0B3D62]/10 text-[#3A3A3A]">
+                  {complaint.aiResponse?.urgency || '—'}
+                </td>
+                <td className="px-4 py-3 border-t border-[#0B3D62]/10">
                   <span
-                    style={{
-                      display: 'inline-block',
-                      padding: '6px 10px',
-                      borderRadius: '999px',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      color: badge.color,
-                      background: badge.background,
-                    }}
+                    className="inline-block text-xs font-bold uppercase tracking-wide px-2 py-1 border"
+                    style={{ color: badge.color, borderColor: badge.border }}
                   >
                     {badge.label}
                   </span>
                 </td>
-                <td style={{ padding: '14px 16px', color: '#64748b' }}>
-                  {complaint.createdAt ? new Date(complaint.createdAt).toLocaleDateString() : '—'}
+                <td className="px-4 py-3 border-t border-[#0B3D62]/10 text-[#5A5A5A]">
+                  {complaint.createdAt ? new Date(complaint.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : '—'}
                 </td>
-                <td style={{ padding: '14px 16px' }}>
+                <td className="px-4 py-3 border-t border-[#0B3D62]/10">
                   <button
                     type="button"
                     onClick={() => onView?.(complaint._id)}
-                    style={{
-                      border: 'none',
-                      borderRadius: '999px',
-                      background: '#2563eb',
-                      color: '#ffffff',
-                      padding: '8px 12px',
-                      cursor: 'pointer',
-                      fontWeight: 600,
-                    }}
+                    className="text-xs font-semibold uppercase tracking-wide px-3 py-1.5 border border-[#0B3D62] text-[#0B3D62] hover:bg-[#0B3D62] hover:text-white transition-colors"
                   >
-{t("view")}
+                    {t("view")}
                   </button>
                 </td>
               </tr>

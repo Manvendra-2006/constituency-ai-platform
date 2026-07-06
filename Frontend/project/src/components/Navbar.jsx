@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth.js";
 import { useTranslation } from "react-i18next";
-import MpProfileModal from "../pages/MpProfileModal.jsx";
+
 const Navbar = ({
   title,
   subtitle,
@@ -12,7 +11,6 @@ const Navbar = ({
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const [showProfile, setShowProfile] = useState(false);
 
   const isMpView = location.pathname.startsWith("/mp");
 
@@ -83,19 +81,13 @@ const Navbar = ({
               <option value="hi" className="text-black">🇮🇳 हिन्दी</option>
             </select>
 
-            {isMpView ? (
-              <button
-                type="button"
-                onClick={() => setShowProfile(true)}
-                className="text-sm px-3 py-2 border border-white/30 text-slate-200 rounded-sm hover:bg-white/10 transition-colors"
-              >
-                {user?.name || t("user")}
-              </button>
-            ) : (
-              <div className="text-sm px-3 py-2 border border-white/30 text-slate-200 rounded-sm">
-                {user?.name || t("user")}
-              </div>
-            )}
+            <button
+              type="button"
+              onClick={() => navigate(isMpView ? "/mp/profile" : "/profile")}
+              className="text-sm px-3 py-2 border border-white/30 text-slate-200 rounded-sm hover:bg-white/10 transition-colors"
+            >
+              {user?.name || t("user")}
+            </button>
 
             <button
               type="button"
@@ -107,8 +99,6 @@ const Navbar = ({
           </div>
         </div>
       </div>
-
-      {showProfile && <MpProfileModal onClose={() => setShowProfile(false)} />}
     </header>
   );
 };

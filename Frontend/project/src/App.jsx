@@ -13,7 +13,8 @@ import MpLogin from './pages/MpLogin.jsx';
 import MpRegister from './pages/MpRegister.jsx';
 import Loading from './components/Loading.jsx';
 import MpVillageProfile from "./pages/MpVillageProfile";
-import MpProfileModal from './pages/MpProfileModal.jsx';
+import MpProfilePage from './pages/MpProfileModal.jsx';
+import UserProfilePage from './pages/UserProfilePage.jsx';
 const HomeRedirect = () => {
   const { isAuthenticated, user, isAuthReady } = useAuth();
 
@@ -42,11 +43,12 @@ const App = () => (
       <Route path="/mp" element={<ProtectedRoute role="mp"><MpDashboard /></ProtectedRoute>} />
       <Route path="/mp/insights" element={<ProtectedRoute role="mp"><MpInsights /></ProtectedRoute>} />
       <Route path="/mp/complaint/:id" element={<ProtectedRoute role="mp"><MpComplaintDetail /></ProtectedRoute>} />
-      <Route path="/mp/profile" element={<MpProfileModal/>}/>
+<Route path="/profile" element={<UserProfilePage />} />
       <Route
   path="/mp/village/:village"
   element={<MpVillageProfile />}
 />
+<Route path="/mp/profile" element={<MpProfilePage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   </AuthProvider>

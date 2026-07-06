@@ -4,63 +4,65 @@ import { ArrowLeft } from 'lucide-react';
 import apiClient from '../api/axios.js';
 import { useTranslation } from 'react-i18next';
 
-const MpProfilePage = () => {
+const UserProfilePage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-useEffect(() => {
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      const res = await apiClient.get('/auth/mpProfile');
 
-      const raw =
-        res.data?.userProfile ||
-        res.data?.mp ||
-        res.data?.data?.mp ||
-        res.data?.data ||
-        res.data;
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const res = await apiClient.get('/auth/getMe'); // apna actual user-profile route yahan daal
 
-      if (!raw || Object.keys(raw).length === 0) {
-        setError('Profile data empty aayi hai — backend response shape check karo');
-        return;
+        console.log('USER PROFILE RAW RESPONSE:', res.data); // debug ke liye, baad me hata dena
+
+        const raw =
+          res.data?.userProfile ||
+          res.data?.user ||
+          res.data?.data?.user ||
+          res.data?.data ||
+          res.data;
+
+        if (!raw || Object.keys(raw).length === 0) {
+          setError('Profile data empty aayi hai — backend response shape check karo');
+          return;
+        }
+
+        const normalized = {};
+        Object.keys(raw).forEach((key) => {
+          normalized[key.toLowerCase()] = raw[key];
+        });
+
+        setProfile(normalized);
+      } catch (err) {
+        setError(err.response?.data?.message || err.message || t('unableToLoadProfile'));
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const normalized = {};
-      Object.keys(raw).forEach((key) => {
-        normalized[key.toLowerCase()] = raw[key];
-      });
-
-      setProfile(normalized);
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || t('unableToLoadProfile'));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchProfile();
-}, []);
+    fetchProfile();
+  }, []);
 
   const pick = (...keys) => {
     if (!profile) return undefined;
     for (const k of keys) {
-      if (profile[k.toLowerCase()] !== undefined && profile[k.toLowerCase()] !== null && profile[k.toLowerCase()] !== '') {
-        return profile[k.toLowerCase()];
-      }
+      const v = profile[k.toLowerCase()];
+      if (v !== undefined && v !== null && v !== '') return v;
     }
     return undefined;
   };
 
   const rows = profile
     ? [
-        [t('name') || 'Name', pick('name', 'mpName', 'fullName')],
-        [t('email') || 'Email', pick('email', 'mpEmail')],
-        ['Government ID', pick('governmentId', 'govId', 'govtId')],
-        ['Constituency Number', pick('constituencyNumber', 'constituencyNo')],
+        [t('name') || 'Name', pick('name', 'fullName', 'userName')],
+        [t('email') || 'Email', pick('email')],
+        ['Phone', pick('phone', 'phoneNumber', 'mobile')],
+        ['Address', pick('address', 'district', 'city')],
         ['Constituency Name', pick('constituencyName', 'constituency')],
         [t('state') || 'State', pick('state')],
       ]
@@ -80,9 +82,9 @@ useEffect(() => {
         </button>
         <div>
           <h1 className="text-lg font-bold text-white uppercase tracking-wide">
-            MP Profile
+            My Profile
           </h1>
-          <p className="text-xs text-white/70">Representative account details</p>
+          <p className="text-xs text-white/70">Citizen account details</p>
         </div>
       </div>
 
@@ -130,4 +132,4 @@ useEffect(() => {
   );
 };
 
-export default MpProfilePage;
+export default UserProfilePage;

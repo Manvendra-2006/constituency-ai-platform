@@ -17,7 +17,7 @@ const MpDashboard = () => {
   const [analytics, setAnalytics] = useState(null);
   const [complaints, setComplaints] = useState([]);
   const [hotspots, setHotspots] = useState([]);
-  const [locations, setLocations] = useState([]);
+  const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [hotspotsLoading, setHotspotsLoading] = useState(true);
@@ -65,22 +65,26 @@ const MpDashboard = () => {
     } finally {
       setHotspotsLoading(false);
     }
-  };
-  const loadMapLocations = async () => {
+  };const loadVillageMarkers = async () => {
   try {
-    const response = await apiClient.get("/user/complaints/map");
 
-    console.log("Data",response.data);   // <-- ye add karo
+    const response = await apiClient.get("/mp/dashboard/village/markers");
 
-    setLocations(response.data.locations || []);
+    console.log(response.data);
+
+    setMarkers(response.data.markers || []);
+
   } catch (err) {
+
     console.log(err);
+
   }
 };
   useEffect(() => {
     loadDashboardData();
     loadHotspots();
-    loadMapLocations();
+    loadVillageMarkers();
+
   }, []);
 
   const colorPalette = ['#2563eb', '#f59e0b', '#10b981', '#8b5cf6', '#ef4444', '#eab308', '#0ea5e9', '#84cc16'];
@@ -270,7 +274,7 @@ const MpDashboard = () => {
 <div className="chart-card">
                 <h3>{t("mapDemandHotspot")}</h3>
 
-  <ComplaintMap locations={locations} />
+  <ComplaintMap markers={markers} />
 </div>
             <ComplaintTable
               complaints={complaints}

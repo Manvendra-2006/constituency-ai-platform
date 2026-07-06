@@ -32,13 +32,14 @@ const aiAnalysis = await analyzeVillage(
   villageData,
   complaintSummary
 );
-   return res.status(200).json({
-  success: true,
-  villageData,
-  complaints,
-  totalComplaints: complaints.length,
-  aiAnalysis,
-});
+    return res.status(200).json({
+      success: true,
+      villageData,
+      complaints,
+      totalComplaints: complaints.length,
+      aiAnalysis
+    });
+
   } catch (error) {
     console.log(error);
 

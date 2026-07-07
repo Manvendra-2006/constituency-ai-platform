@@ -51,7 +51,7 @@ return resp.status(409).json({
         )
         resp.cookie("refreshToken",refreshToken,{
             httpOnly:true,
-            secure:false,
+            secure:true,
             sameSite:"strict",
             maxAge:7 * 24 * 60 * 60 * 1000
         })
@@ -98,7 +98,7 @@ return resp.status(401).json({
         )
         resp.cookie("refreshToken",refreshToken,{
             httpOnly:true,
-            secure:false,
+            secure:true,
             sameSite:"strict",
             maxAge:7 * 24 * 60 * 60 * 1000
         })
@@ -178,7 +178,7 @@ export async function RefreshTokenMpController(req,resp){
         resp.cookie("refreshToken",newrefreshToken,{
             httpOnly:true,
             sameSite:"strict",
-            secure:false,
+            secure:true,
             maxAge:7 * 24 * 60 * 60 * 1000
         })
        return resp.status(200).json({

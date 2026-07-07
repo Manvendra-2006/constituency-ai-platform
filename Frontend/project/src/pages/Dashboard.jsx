@@ -48,24 +48,6 @@ const Dashboard = () => {
         <div className="flex-1 bg-white" />
         <div className="flex-1 bg-[#138808]" />
       </div>
-
-      {/* Official header */}
-      <header className="bg-[#0B3D62] text-white border-b-4 border-[#8B1E23]">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-4">
-          <div className="w-11 h-11 rounded-full border-2 border-[#FFD34D] flex items-center justify-center text-xs font-bold shrink-0">
-            GoI
-          </div>
-          <div>
-            <p className="text-[10px] tracking-widest uppercase text-[#FFD34D]">
-              CivicPulse · Citizen Portal
-            </p>
-            <h1 className="text-lg sm:text-xl font-bold leading-tight">
-              {t("yourComplaints") || "Dashboard"}
-            </h1>
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-6xl mx-auto px-4 py-8">
 
         <Navbar />

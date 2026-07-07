@@ -13,7 +13,7 @@ import ComplaintMap from "../components/ComplaintMap";
 const MpDashboard = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  
+
   const [analytics, setAnalytics] = useState(null);
   const [complaints, setComplaints] = useState([]);
   const [hotspots, setHotspots] = useState([]);
@@ -65,21 +65,21 @@ const MpDashboard = () => {
     } finally {
       setHotspotsLoading(false);
     }
-  };const loadVillageMarkers = async () => {
-  try {
+  }; const loadVillageMarkers = async () => {
+    try {
 
-    const response = await apiClient.get("/mp/dashboard/village/markers");
+      const response = await apiClient.get("/mp/dashboard/village/markers");
 
-    console.log(response.data);
+      console.log(response.data);
 
-    setMarkers(response.data.markers || []);
+      setMarkers(response.data.markers || []);
 
-  } catch (err) {
+    } catch (err) {
 
-    console.log(err);
+      console.log(err);
 
-  }
-};
+    }
+  };
   useEffect(() => {
     loadDashboardData();
     loadHotspots();
@@ -229,13 +229,13 @@ const MpDashboard = () => {
                         <div className="hotspot-heading">
                           <div>
                             <h4>📍 {hotspot.village}</h4>
-        <button
-    className="btn btn-primary"
-    style={{ marginTop: "8px", marginBottom: "8px" }}
-    onClick={() => navigate(`/mp/village/${hotspot.village}`)}
-  >
-    {t("viewProfile")}
-  </button>
+                            <button
+                              className="btn btn-primary"
+                              style={{ marginTop: "8px", marginBottom: "8px" }}
+                              onClick={() => navigate(`/mp/village/${hotspot.village}`)}
+                            >
+                              {t("viewProfile")}
+                            </button>
                             <p>{t("totalComplaintsLabel")}: {hotspot.totalComplaints}</p>
                           </div>
                           <span className={`priority-badge ${priority.tone}`}>{priority.label}</span>
@@ -271,18 +271,23 @@ const MpDashboard = () => {
                 </div>
               )}
             </div>
-<div className="chart-card">
-                <h3>{t("mapDemandHotspot")}</h3>
+            <div className="chart-card">
+              <h3>{t("mapDemandHotspot")}</h3>
 
-  <ComplaintMap markers={markers} />
-</div>
-            <ComplaintTable
-              complaints={complaints}
-              onView={(id) => navigate(`/mp/complaint/${id}`)}
-            />
+              <ComplaintMap markers={markers} />
+            </div>
+           <ComplaintTable
+  complaints={complaints}
+  onView={(id) => navigate(`/mp/complaint/${id}`)}
+  isMp={true}
+/>
+            
           </>
         )}
       </div>
+      <p className="text-center text-[10px] text-[#5A5A5A] mt-6">
+        This is a system-generated portal. For official use only.
+      </p>
     </div>
   );
 };

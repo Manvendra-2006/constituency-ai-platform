@@ -61,9 +61,8 @@ const UserProfilePage = () => {
     ? [
         [t('name') || 'Name', pick('name', 'fullName', 'userName')],
         [t('email') || 'Email', pick('email')],
-        ['Phone', pick('phone', 'phoneNumber', 'mobile')],
-        ['Address', pick('address', 'district', 'city')],
-        ['Constituency Name', pick('constituencyName', 'constituency')],
+        ['Address', pick('address', 'village', 'district', 'city')],
+        ['Constituency Name', pick('address', 'district', 'city')],
         [t('state') || 'State', pick('state')],
       ]
     : [];

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-const ComplaintTable = ({ complaints, onView }) => {
+const ComplaintTable = ({ complaints, onView, isMp = false }) => {
   const { t } = useTranslation();
 
   const getStatusBadge = (status) => {
@@ -26,20 +26,25 @@ const ComplaintTable = ({ complaints, onView }) => {
     );
   }
 
+  const headings = [
+    t("complaintId"),
+    t("village"),
+    t("category"),
+    t("urgency"),
+    t("status"),
+    t("date"),
+  ];
+
+  if (isMp) {
+    headings.push(t("action"));
+  }
+
   return (
     <div className="overflow-x-auto border border-[#0B3D62]/30 bg-white font-serif">
       <table className="w-full min-w-[900px] border-collapse text-sm">
         <thead>
           <tr className="bg-[#0B3D62]/5">
-            {[
-              t("complaintId"),
-              t("village"),
-              t("category"),
-              t("urgency"),
-              t("status"),
-              t("date"),
-              t("action"),
-            ].map((heading) => (
+            {headings.map((heading) => (
               <th
                 key={heading}
                 className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-[#0B3D62] border-b border-[#0B3D62]/30"
@@ -80,15 +85,17 @@ const ComplaintTable = ({ complaints, onView }) => {
                 <td className="px-4 py-3 border-t border-[#0B3D62]/10 text-[#5A5A5A]">
                   {complaint.createdAt ? new Date(complaint.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : '—'}
                 </td>
-                <td className="px-4 py-3 border-t border-[#0B3D62]/10">
-                  <button
-                    type="button"
-                    onClick={() => onView?.(complaint._id)}
-                    className="text-xs font-semibold uppercase tracking-wide px-3 py-1.5 border border-[#0B3D62] text-[#0B3D62] hover:bg-[#0B3D62] hover:text-white transition-colors"
-                  >
-                    {t("view")}
-                  </button>
-                </td>
+                {isMp && (
+                  <td className="px-4 py-3 border-t border-[#0B3D62]/10">
+                    <button
+                      type="button"
+                      onClick={() => onView?.(complaint._id)}
+                      className="text-xs font-semibold uppercase tracking-wide px-3 py-1.5 border border-[#0B3D62] text-[#0B3D62] hover:bg-[#0B3D62] hover:text-white transition-colors"
+                    >
+                      {t("view")}
+                    </button>
+                  </td>
+                )}
               </tr>
             );
           })}

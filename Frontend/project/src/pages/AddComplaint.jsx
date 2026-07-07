@@ -39,28 +39,54 @@ const AddComplaint = () => {
 
     return () => URL.revokeObjectURL(previewUrl);
   }, [image]);
+useEffect(() => {
+  if (!navigator.geolocation) {
+    console.log("Geolocation is not supported");
+    return;
+  }
+navigator.permissions
+  .query({ name: "geolocation" })
+  .then((result) => {
+    console.log("Permission:", result.state);
+  });
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      console.log("SUCCESS");
+      console.log(position);
 
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      console.log("Geolocation is not supported.");
-      return;
-    }
+      setLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+    },
+    (error) => {
+      console.log("Error Code:", error.code);
+      console.log("Error Message:", error.message);
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-      },
-      (error) => {
-        console.log(error);
-      },
-      {
-        enableHighAccuracy: true,
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          console.log("Permission denied");
+          break;
+
+        case error.POSITION_UNAVAILABLE:
+          console.log("Location unavailable");
+          break;
+
+        case error.TIMEOUT:
+          console.log("Request timeout");
+          break;
+
+        default:
+          console.log("Unknown error");
       }
-    );
-  }, []);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    }
+  );
+}, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

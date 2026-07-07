@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create a shared Axios instance for all API requests.
 const apiClient = axios.create({
-  baseURL: 'http://localhost:6700/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
 });
 

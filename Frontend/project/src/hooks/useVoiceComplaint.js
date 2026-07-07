@@ -15,17 +15,11 @@ export const useVoiceComplaint = () => {
 
   const [voiceError, setVoiceError] = useState("");
 
-  useEffect(() => {
-    console.log("[Voice] browserSupportsSpeechRecognition:", browserSupportsSpeechRecognition);
-  }, [browserSupportsSpeechRecognition]);
-
   const startVoiceCapture = useCallback(() => {
     setVoiceError("");
-    console.log("[Voice] startVoiceCapture called");
 
     if (!browserSupportsSpeechRecognition) {
       setVoiceError("Speech Recognition is not supported in this browser.");
-      console.log("[Voice] browser does not support speech recognition");
       return;
     }
 
@@ -36,9 +30,6 @@ export const useVoiceComplaint = () => {
     SpeechRecognition.startListening({
       language: DEFAULT_LANGUAGE,
       continuous: true,
-    }).catch((err) => {
-      console.error("[Voice] startListening failed:", err);
-      setVoiceError(`Failed to start: ${err.message || err}`);
     });
   }, [browserSupportsSpeechRecognition, listening, resetTranscript]);
 

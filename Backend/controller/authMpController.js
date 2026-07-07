@@ -52,7 +52,7 @@ return resp.status(409).json({
         resp.cookie("refreshToken",refreshToken,{
             httpOnly:true,
             secure:true,
-            sameSite:"strict",
+            sameSite:"none",
             maxAge:7 * 24 * 60 * 60 * 1000
         })
         return resp.status(201).json({message:"mp is registered Successfully",accessToken,mp})
@@ -99,7 +99,7 @@ return resp.status(401).json({
         resp.cookie("refreshToken",refreshToken,{
             httpOnly:true,
             secure:true,
-            sameSite:"strict",
+            sameSite:"none",
             maxAge:7 * 24 * 60 * 60 * 1000
         })
         return resp.status(200).json({message:"Login Successfully",isUserExists,accessToken})
@@ -177,7 +177,7 @@ export async function RefreshTokenMpController(req,resp){
         await session.save()
         resp.cookie("refreshToken",newrefreshToken,{
             httpOnly:true,
-            sameSite:"strict",
+            sameSite:"none",
             secure:true,
             maxAge:7 * 24 * 60 * 60 * 1000
         })

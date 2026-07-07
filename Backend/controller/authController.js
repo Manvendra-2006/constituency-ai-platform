@@ -51,7 +51,7 @@ export async function RegisterController(req,resp){
         resp.cookie("refreshToken",refreshToken,{
             httpOnly:true,
             secure:true,
-            sameSite:"strict",
+            sameSite:"none",
             maxAge:7 * 24 * 60 * 60 * 1000
         })
         return resp.status(201).json({message:"User is registered Successfully",accessToken,user})
@@ -99,7 +99,7 @@ export async function loginController(req,resp){
         resp.cookie("refreshToken",refreshToken,{
             httpOnly:true,
             secure:true,
-            sameSite:"strict",
+            sameSite:"none",
             maxAge:7 * 24 * 60 * 60 * 1000
         })
         return resp.status(200).json({message:"Login Successfully",isUserExists,accessToken})
@@ -178,7 +178,7 @@ export async function RefreshTokenController(req,resp){
         await session.save()
         resp.cookie("refreshToken",newrefreshToken,{
             httpOnly:true,
-            sameSite:"strict",
+            sameSite:"none",
             secure:true,
             maxAge:7 * 24 * 60 * 60 * 1000
         })

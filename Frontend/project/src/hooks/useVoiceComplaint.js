@@ -32,13 +32,14 @@ export const useVoiceComplaint = () => {
       continuous: true,
     });
   }, [browserSupportsSpeechRecognition, listening, resetTranscript]);
+const stopVoiceCapture = useCallback(() => {
+  console.log("Stop button clicked");
 
-  const stopVoiceCapture = useCallback(() => {
-    if (listening) {
-      SpeechRecognition.stopListening();
-    }
-  }, [listening]);
-
+  if (listening) {
+    console.log("Stopping...");
+    SpeechRecognition.stopListening();
+  }
+}, [listening]);
   const clearVoiceCapture = useCallback(() => {
     resetTranscript();
     setVoiceError("");

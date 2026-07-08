@@ -136,8 +136,10 @@ navigator.permissions
       const payload = new FormData();
       payload.append('village', formData.village);
       payload.append('originalComplaint', formData.originalComplaint);
-      payload.append("latitude", location.latitude);
-      payload.append("longitude", location.longitude);
+      if (location.latitude !== null && location.longitude !== null) {
+  payload.append("latitude", location.latitude);
+  payload.append("longitude", location.longitude);
+}
       if (image) {
         payload.append('image', image);
       }

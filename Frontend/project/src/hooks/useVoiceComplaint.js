@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -11,15 +11,21 @@ export const useVoiceComplaint = () => {
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
+    isMicrophoneAvailable,
   } = useSpeechRecognition();
 
   const [voiceError, setVoiceError] = useState("");
 
-  const startVoiceCapture = useCallback(() => {
+  const startVoiceCapture = useCallback(async () => {
     setVoiceError("");
 
     if (!browserSupportsSpeechRecognition) {
-      setVoiceError("Speech Recognition is not supported in this browser.");
+      setVoiceError("Speech Recognition supported nahi hai. Chrome use karo.");
+      return;
+    }
+
+    if (isMicrophoneAvailable === false) {
+      setVoiceError("Microphone permission denied hai. Browser settings mein allow karo.");
       return;
     }
 
@@ -27,29 +33,25 @@ export const useVoiceComplaint = () => {
 
     resetTranscript();
 
-    SpeechRecognition.startListening({
-      language: DEFAULT_LANGUAGE,
-      continuous: true,
-    });
-  }, [browserSupportsSpeechRecognition, listening, resetTranscript]);
-const stopVoiceCapture = useCallback(() => {
-  console.log("Stop button clicked");
+    try {
+      await SpeechRecognition.startListening({
+        language: DEFAULT_LANGUAGE,
+        continuous: true,
+      });
+    } catch (err) {
+      console.error("startListening error:", err);
+      setVoiceError("Recording start nahi ho payi: " + err.message);
+    }
+  }, [browserSupportsSpeechRecognition, isMicrophoneAvailable, listening, resetTranscript]);
 
-  if (listening) {
-    console.log("Stopping...");
+  const stopVoiceCapture = useCallback(() => {
     SpeechRecognition.stopListening();
-  }
-}, [listening]);
+  }, []);
+
   const clearVoiceCapture = useCallback(() => {
     resetTranscript();
     setVoiceError("");
   }, [resetTranscript]);
-
-  useEffect(() => {
-    return () => {
-      SpeechRecognition.stopListening();
-    };
-  }, []);
 
   return {
     transcript,

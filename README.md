@@ -261,6 +261,13 @@ npm run dev
 | i18n | [react-i18next](https://react.i18next.com) |
 | UI | [Lucide React](https://lucide.dev) |
 
+---
+
+## 🧑‍💻 Team
+
+**PeoplePulse AI** — built for the BhartiyaAntriksh Hackathon
+
+---
 
 ## 📄 License
 

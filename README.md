@@ -1,13 +1,12 @@
 # 🏛️ CivicLoop — AI-Powered Civic Grievance & Rural Development Intelligence Platform
 
-> **Team:** PeoplePulse AI
 > Transforming citizen complaints into actionable, village-level development intelligence for Members of Parliament — powered by AI, GIS, and real-time civic data.
 
 ---
 
 ## 📌 Overview
 
-**CivicLoop** (formerly *CivicPulse*) is a full-stack, AI-powered grievance redressal and rural development platform built for **Chhindwara district, Madhya Pradesh**. It goes beyond traditional complaint-logging systems by combining **Artificial Intelligence, village demographic/infrastructure data, and GIS-based visualization** to help Members of Parliament (MPs) identify problem hotspots, prioritize urgent issues, and make data-driven governance decisions.
+**CivicLoop** (formerly *CivicPulse*) is a full-stack, AI-powered grievance redressal and rural development platform designed to scale across **any constituency in India** — not limited to a single district. It goes beyond traditional complaint-logging systems by combining **Artificial Intelligence, village demographic/infrastructure data, and GIS-based visualization** to help Members of Parliament (MPs) identify problem hotspots, prioritize urgent issues, and make data-driven governance decisions for their respective constituencies.
 
 Citizens can register complaints via **text, voice, or image**, and every complaint is automatically analyzed by AI for category, urgency, and summary — enabling faster resolution and transparent, proactive governance.
 
@@ -260,12 +259,6 @@ npm run dev
 | Auth & Security | [JWT](https://jwt.io) · [bcrypt.js](https://github.com/kelektiv/node.bcrypt.js) |
 | i18n | [react-i18next](https://react.i18next.com) |
 | UI | [Lucide React](https://lucide.dev) |
-
----
-
-## 🧑‍💻 Team
-
-**PeoplePulse AI** — built for the BhartiyaAntriksh Hackathon
 
 ---
 

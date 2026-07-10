@@ -181,8 +181,8 @@ CivicLoop/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/Manvendra-2006/CivicLoop.git
-cd CivicLoop
+[https://github.com/Manvendra-2006/constituency-ai-platform.git]
+cd GOVT
 ```
 
 ### 2. Backend Setup
